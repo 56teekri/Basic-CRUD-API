@@ -16,14 +16,14 @@ def get_data(id=None):
     print(data)
 
 #URL="http://127.0.0.1:8000/getdata"
-#get_data(1)
+#get_data()
 
 
 
 def create_data():
     data={
-        'name':'kallu',
-        'roll':-1,
+        'name':'chitti',
+        'roll':7,
         'city':'mathura'
     }
     json_data=json.dumps(data)
