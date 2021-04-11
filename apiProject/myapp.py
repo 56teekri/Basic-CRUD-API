@@ -15,15 +15,15 @@ def get_data(id=None):
         data="spam"
     print(data)
 
-URL="http://127.0.0.1:8000/getdata"
-get_data(1)
+#URL="http://127.0.0.1:8000/getdata"
+#get_data(1)
 
 
 
 def create_data():
     data={
-        'name':'kalua',
-        'roll':5,
+        'name':'kallu',
+        'roll':-1,
         'city':'mathura'
     }
     json_data=json.dumps(data)
@@ -35,8 +35,8 @@ def create_data():
         data="spam"
     print(data)
 
-#URL="http://127.0.0.1:8000/createdata"
-#create_data()
+URL="http://127.0.0.1:8000/createdata"
+create_data()
 
 
 
