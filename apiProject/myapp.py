@@ -10,8 +10,8 @@ def get_data(id=None):
     r=requests.get(url=URL,headers=headers,data=json_data)
     data=r.json()
     print(data) 
-#URL="http://127.0.0.1:8000/getdata"
-#get_data()
+URL="http://127.0.0.1:8000/getdata"
+get_data()
 
 def create_data():
     data={
@@ -39,6 +39,7 @@ def update_data():
     print(data)
 #URL="http://127.0.0.1:8000/updatedata"
 #update_data()
+
 
 def delete_data():
     data={

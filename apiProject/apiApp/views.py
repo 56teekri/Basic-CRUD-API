@@ -10,8 +10,8 @@ from rest_framework.response import Response
 from rest_framework import status
 
 @api_view(['GET'])
-def get_student(request):
-    id=request.data.get('id')
+def get_student(request,pk=None):
+    id=pk
     if(id is not None):
         stu=models.Student.objects.get(id=id)
         serializer=serializers.StudentSerializer(stu)
@@ -29,29 +29,41 @@ def create_student(request):
     if(serializer.is_valid()):
         serializer.save()
         response={'msg':'data created'}
-        return Response(response)
+        return Response(response,status=status.HTTP_201_CREATED)
     else:
-        return Response(serializer.errors)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['PUT']) 
+@api_view(['PUT','PATCH']) 
 @csrf_exempt
-def update_student(request):
-    id=request.data.get('id')
-    stu=models.Student.objects.get(id=id)
-    data=request.data
-    serializer=serializers.StudentSerializer(stu,data=data,partial=True)
-    if(serializer.is_valid()):
-        serializer.save()
-        response={'msg':'data updated'}
-        return Response(response)
-    else:
-        return Response(serializer.errors)
+def update_student(request,pk=None):
+    if(request.method=='PUT'):
+        id=pk
+        stu=models.Student.objects.get(id=id)
+        data=request.data
+        serializer=serializers.StudentSerializer(stu,data=data)
+        if(serializer.is_valid()):
+            serializer.save()
+            response={'msg':'complete data updated'}
+            return Response(response)
+        else:
+            return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+    if(request.method=='PATCH'):
+        id=pk
+        stu=models.Student.objects.get(id=id)
+        data=request.data
+        serializer=serializers.StudentSerializer(stu,data=data,partial=True)
+        if(serializer.is_valid()):
+            serializer.save()
+            response={'msg':'partial data updated'}
+            return Response(response)
+        else:
+            return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['DELETE']) 
+@api_view(['DELETE'])
 @csrf_exempt
-def delete_student(request):
-    id=request.data.get('id')
+def delete_student(request,pk=None):
+    id=pk
     stu=models.Student.objects.get(id=id)
     stu.delete()
     response={'msg':'data deleted'}
