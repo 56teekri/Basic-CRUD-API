@@ -21,21 +21,19 @@ def get_student(request,pk=None):
         serializer=serializers.StudentSerializer(stu,many=True)
         return Response(serializer.data)
 
-@api_view(['POST']) 
-@csrf_exempt
+@api_view(['POST'])
 def create_student(request):
     data=request.data
     serializer=serializers.StudentSerializer(data=data)
     if(serializer.is_valid()):
         serializer.save()
         response={'msg':'data created'}
-        return Response(response,status=status.HTTP_201_CREATED)
+        return Response(response)
     else:
-        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors)
 
 
-@api_view(['PUT','PATCH']) 
-@csrf_exempt
+@api_view(['PUT','PATCH'])
 def update_student(request,pk=None):
     if(request.method=='PUT'):
         id=pk
@@ -47,7 +45,7 @@ def update_student(request,pk=None):
             response={'msg':'complete data updated'}
             return Response(response)
         else:
-            return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors)
     if(request.method=='PATCH'):
         id=pk
         stu=models.Student.objects.get(id=id)
@@ -58,10 +56,9 @@ def update_student(request,pk=None):
             response={'msg':'partial data updated'}
             return Response(response)
         else:
-            return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors)
 
 @api_view(['DELETE'])
-@csrf_exempt
 def delete_student(request,pk=None):
     id=pk
     stu=models.Student.objects.get(id=id)

@@ -11,12 +11,12 @@ def get_data(id=None):
     data=r.json()
     print(data) 
 URL="http://127.0.0.1:8000/getdata"
-get_data()
+get_data(1)
 
 def create_data():
     data={
-        'name':'laala',
-        'roll':6,
+        'name':'wedeassd',
+        'roll':219,
         'city':'mathura'
     }
     headers={'Content-Type':'application/json'}
