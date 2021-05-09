@@ -1,52 +1,59 @@
+from django.shortcuts import render
 from apiApp import models,serializers
 from rest_framework import status
-from rest_framework.generics import GenericAPIView
-from rest_framework.generics import ListAPIView,CreateAPIView,RetrieveAPIView,UpdateAPIView,DestroyAPIView,ListCreateAPIView,RetrieveUpdateAPIView,RetrieveDestroyAPIView,RetrieveUpdateDestroyAPIView
-
-class StudentList(ListAPIView):
-    queryset=models.Student.objects.all()
-    serializer_class=serializers.StudentSerializer
-
-class StudentCreate(CreateAPIView):
-    queryset=models.Student.objects.all()
-    serializer_class=serializers.StudentSerializer
-
-class StudentRetrieve(RetrieveAPIView):
-    queryset=models.Student.objects.all()
-    serializer_class=serializers.StudentSerializer
-
-class StudentUpdate(UpdateAPIView):
-    queryset=models.Student.objects.all()
-    serializer_class=serializers.StudentSerializer
-
-class StudentDelete(DestroyAPIView):
-    queryset=models.Student.objects.all()
-    serializer_class=serializers.StudentSerializer
-
-class StudentListCreate(ListCreateAPIView):
-    queryset=models.Student.objects.all()
-    serializer_class=serializers.StudentSerializer
-
-class StudentRetrieveUpdate(RetrieveUpdateAPIView):
-    queryset=models.Student.objects.all()
-    serializer_class=serializers.StudentSerializer
-
-class StudentRetrieveDestroy(RetrieveDestroyAPIView):
-    queryset=models.Student.objects.all()
-    serializer_class=serializers.StudentSerializer
+from rest_framework import viewsets
+from rest_framework.response import Response
 
 
-class StudentRetrieveDestroyUpdate(RetrieveUpdateDestroyAPIView):
-    queryset=models.Student.objects.all()
-    serializer_class=serializers.StudentSerializer
+class StudentViewSet(viewsets.ViewSet):
+    def list(self,request):
+        stu=models.Student.objects.all()
+        serializer=serializers.StudentSerializer(stu,many=True)
+        return Response(serializer.data)
+    
+    def retrieve(self,request,pk=None):
+        if(pk):
+            stu=models.Student.objects.get(id=pk)
+            serializer=serializers.StudentSerializer(stu)
+            return Response(serializer.data)
+    
+    def create(self,request,pk=None):
+        data=request.data
+        serializer=serializers.StudentSerializer(data=data)
+        if(serializer.is_valid()):
+            serializer.save()
+            msg={'msg':'data created'}
+            return Response(msg,status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
+    def update(self,request,pk):
+        data=request.data
+        stu=models.Student.objects.get(pk=pk)
+        serializer=serializers.StudentSerializer(stu,data=data)
+        if(serializer.is_valid()):
+            serializer.save()
+            msg={'msg':'data created'}
+            return Response(msg,status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
+    def partial_update(self,request,pk):
+        data=request.data
+        stu=models.Student.objects.get(pk=pk)
+        serializer=serializers.StudentSerializer(stu,data=data,partial=True)
+        if(serializer.is_valid()):
+            serializer.save()
+            msg={'msg':'data created'}
+            return Response(msg,status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
-
-
-
-
-
+    def destroy(self,request,pk):
+        stu=models.Student.objects.get(pk=pk)
+        stu.delete()
+        msg={'msg':'data deleted'}
+        return Response(msg)
 
 
 
